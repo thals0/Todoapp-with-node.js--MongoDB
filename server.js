@@ -5,6 +5,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const MongoClient = require('mongodb').MongoClient;
 app.set('view engine', 'ejs');
 
+app.use('/public', express.static('public'));
+
 let db;
 MongoClient.connect(
   'mongodb+srv://Somin:dlthals17@cluster0.kbk9mgh.mongodb.net/?retryWrites=true&w=majority',
@@ -30,11 +32,13 @@ MongoClient.connect(
 );
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+  // res.sendFile(__dirname + '/index.html');
+  res.render('index.ejs');
 });
 
 app.get('/write', function (req, res) {
-  res.sendFile(__dirname + '/write.html');
+  // res.sendFile(__dirname + '/write.html');
+  res.render('write.ejs');
 });
 
 app.post('/add', function (req, res) {
@@ -79,4 +83,32 @@ app.get('/list', function (req, res) {
       console.log(result);
       res.render('list.ejs', { posts: result });
     });
+});
+
+// app.delete('/delete', function (req, res) {
+//   req.body._id = parseInt(req.body._id);
+//   db.collection('post').deleteOne(req.body, function (err, result) {
+//     console.log('삭제 완료');
+//   });
+//   res.send('삭제 완료');
+// });
+
+app.delete('/delete', function (req, res) {
+  req.body._id = parseInt(req.body._id);
+  db.collection('post').deleteOne(req.body, function (err, result) {
+    console.log('삭제완료');
+    res.status(200).send({ message: '성공' });
+    // res.status(400).send({ message: '실패' });
+  });
+});
+
+app.get('/detail/:id', function (req, res) {
+  db.collection('post').findOne(
+    { _id: parseInt(req.params.id) },
+    function (err, result) {
+      res.render('detail.ejs', { data: result });
+      console.log(result);
+      if (err) return console.log(err);
+    }
+  );
 });
