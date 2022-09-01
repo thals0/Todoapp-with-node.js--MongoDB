@@ -1,2 +1,2 @@
 # Todoapp with node.js, MongoDB
-node.js, MongoDB에 대해 공부하고, TodoApp 만들기
+node.js, MongoDB 공부하고, TodoApp 만들어보기
